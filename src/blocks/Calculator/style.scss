@@ -1,0 +1,92 @@
+/* section-catalog */
+#section-catalog {
+    // background-image: url(../img/back/bg_catalog.svg);
+  }
+  #section-catalog svg{
+    max-height: 33px;
+  }
+  .section-catalog__cart-product {
+    box-shadow: 2px 5px 1rem rgba(0,0,0,0.4);
+  }
+  .has-calculator__taitl{
+    margin: 0;
+    padding: 1rem 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    color: white;
+    background-color: #239666;
+    font-weight: 800;
+  }
+  .castom_input .c__input input:checked + label {
+    color: white;
+    background: -webkit-gradient(linear, left top, left bottom, from(#5fc6e9), to(#598ecc));
+    background: linear-gradient(#5fc6e9, #598ecc);
+    border-top: 2px solid #598ecc;
+    box-shadow: 0 0 1px #5fc6e9;
+  }
+  .castom_input .c__input label {
+    padding: 0.2rem 1rem;
+    font-size: 1.2em;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.6em;
+    border-radius: 8px;
+    color: #000;
+    border-top: 2px solid #F2F5F8;
+    background: #F2F5F8;
+    cursor: pointer;
+    margin: 0.2rem;
+  }
+  .castom_input .c__input label:hover {
+    background: #d1dce6;
+    border-top: 2px solid #b0c2d4;
+    box-shadow: 0 0 1px #b0c2d4;
+  }
+  .castom_input .c__input input {
+    display: none;
+  }
+  .catalog__label {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    font-size: 1.5rem;
+    -webkit-transform: translate(-10%,-50%);
+            transform: translate(-10%,-50%);
+  }
+  .animated-pulse{
+    -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-name: pulse;
+            animation-name: pulse;
+  }
+  @-webkit-keyframes pulse {
+    0% {
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+    50% {
+      -webkit-transform: scale(1.1);
+              transform: scale(1.1);
+    }
+    100% {
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  @keyframes pulse {
+    0% {
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+    50% {
+      -webkit-transform: scale(1.1);
+              transform: scale(1.1);
+    }
+    100% {
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  
