@@ -50,7 +50,7 @@ let coversArr = (trueIteration, fullForm, activeIteration, nameInput, product) =
 		})
 	} else {
 		activeIteration++;
-		return coversArr(trueIteration, fullForm[Object.keys(fullForm)[0]], activeIteration)
+		return coversArr(trueIteration, fullForm[Object.keys(fullForm)[0]], activeIteration, nameInput, product)
 	}
 }
 

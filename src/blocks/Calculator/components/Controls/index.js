@@ -174,17 +174,6 @@ const Controls = ({ attributes, setAttributes, className }) => {
           <Button 
             isPrimary
             onClick={() => console.log(attributes)}>State</Button>
-          <Button 
-            isPrimary
-            onClick={() => console.log(attributes.dataItems)}>dataItems</Button>
-        </PanelRow>
-        <PanelRow>
-          <Button 
-            isPrimary
-            onClick={() => console.log(attributes.dataItems.product1.form)}>form</Button>
-          <Button 
-            isPrimary
-            onClick={() => console.log(attributes.dataItems.product1.formParameters.sequence)}>sequence</Button>
         </PanelRow>
       </PanelBody>
       <PanelBody title={__('main')} initialOpen={true}>
