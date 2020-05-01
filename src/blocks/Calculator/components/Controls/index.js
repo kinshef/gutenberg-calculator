@@ -1,168 +1,97 @@
 const { __ } = wp.i18n
 const { InspectorControls, MediaUpload } = wp.blockEditor
 const {useState, useEffect} = wp.element
-import { Button, RadioControl } from "@wordpress/components";
-const {PanelBody, PanelRow, TextControl, CheckboxControl, SelectControl} = wp.components
+const {PanelBody, PanelRow, TextControl, Button, CheckboxControl, SelectControl, RadioControl} = wp.components
 
 
 const Controls = ({ attributes, setAttributes, className }) => {
 
-  // let numberToArrey = (a) => {
-  //   var arr = [];
-  //   for(let i=0;i<a;i++){arr.push(i)}
-  //   return arr
-  // }
-  // const [localState, setLocalState] = useState({
-  //   'colAdvantages': [...numberToArrey(attributes.colAdvantages)]
-  // })
-
-
-
-  // useEffect(() => {
-  //   localStorage.setItem('calulatorData', JSON.stringify({...attributes.dataItems}));
-  // }, [Object.keys(JSON.parse(localStorage.getItem('calulatorData'))).length === 0]);
-
-//   var localNevValue = function(key, nevValue, obgect){
-//     var inquiry = JSON.parse(localStorage.getItem(key));
-//     if(obgect){
-//         var Value = {...inquiry, [obgect]: {...inquiry[obgect], ...nevValue}}
-//     }else{
-//         var Value = {...inquiry, ...nevValue}
-//     }
-//     localStorage.setItem(key, JSON.stringify(Value));
-// }
-// localNevValue('calulatorData', attributes.dataItems)
-
-
-  const getCheckboxControl = (label, help, attribute, twoObject) => (
-    <PanelRow>
-      <CheckboxControl
-        label={label}
-        help={help}
-        checked={
-          twoObject
-            ? attributes[twoObject][attribute]
-            : attributes[attribute]
-        }
-        onChange={ val => {
-          twoObject
-            ? setAttributes({ [twoObject]: { ...attributes[twoObject], [attribute]: !attributes[twoObject][attribute]}})
-            : setAttributes({ [attribute]: !attributes[attribute] })
-        } }
-      />
-    </PanelRow>
+  const [localState, setLocalState] = useState(
+    {'newSection': (()=>{
+      let asd = {}
+      Object.keys(attributes.dataItems).map(productName => {
+        asd = {...asd, [productName]: ''}
+      })
+      return asd
+    })(), 'newProduct': ''}
   )
-  const getRadioControl = (label, help, options, attribute, twoObject ) => (
-    <RadioControl
-      label={label}
-      help={help}
-      selected={
-        twoObject
-          ? attributes[twoObject][attribute]
-          : attributes[attribute]
-      }
-      options={options}
-      onChange={ val => {
-        twoObject
-          ? setAttributes({ [twoObject]: {...attributes[twoObject],[attribute]: val}})
-          : setAttributes({ [attribute]: val })
-      } }
-    />
-  )
+  useEffect(() => {
+    let asd = {...localState.newSection}
+    Object.keys(attributes.dataItems).map(productName => {
+      asd = {...asd, [productName]: ''}
+    })
+    setLocalState({
+      ...localState, 'newSection': { ...asd }
+    })
+  }, [Object.keys(attributes.dataItems).length]);
 
-  const getImgToState = (attribute, objectAttribute, objectAttribute2 ) => (
-    <MediaUpload
-      onSelect={e => {
-        objectAttribute
-          ? objectAttribute2
-            ? attributes[objectAttribute] && attributes[objectAttribute][objectAttribute2]
-              ? setAttributes({ [objectAttribute]: { ...attributes[objectAttribute], [objectAttribute2]: {...attributes[objectAttribute][objectAttribute2], [attribute]: e.sizes.full.url}}})
-              : setAttributes({ [objectAttribute]: { ...attributes[objectAttribute], [objectAttribute2]: {...attributes[objectAttribute][objectAttribute2], [attribute]: e.sizes.full.url}}})
-            : setAttributes({ [objectAttribute]: {...attributes[objectAttribute], [attribute]: e.sizes.full.url}})
-          : setAttributes({...attributes, [attribute]: e.sizes.full.url})
-      }}
-      render={({ open }) => {
-        return <div>
-          {attributes[objectAttribute] !== undefined && attributes[objectAttribute][attribute] !== undefined
-            ? <img src={attributes[objectAttribute][attribute]} onClick={open} />
-            : <Button isPrimary onClick={open}>Добавить иконку</Button>}
-        </div>
-      }}
-    />
-  )
-
-  const getTextToStateTwoObject = (label, help, attribute, objectAttribute, objectAttribute2) => (
-    <div>
-      <TextControl
-        label={label}
-        help={help}
-        value={localState[objectAttribute2] && localState[objectAttribute2][attribute]
-          ? localState[objectAttribute2][attribute]
-          : ''}
-        onChange={text => setLocalState({...localState, [objectAttribute2]: { [attribute]: text}})}
-      />
-      <Button 
-        style={{marginRight: "0.5rem"}}
-        isPrimary
-        onClick={() => {
-          localState[objectAttribute2]
-            ? setAttributes({...attributes, [objectAttribute]: { ...attributes[objectAttribute], [objectAttribute2]: {...attributes[objectAttribute][objectAttribute2], [attribute]: localState[objectAttribute2][attribute] } }})
-            : null
-          setLocalState({...localState, [objectAttribute2]: {[attribute]: ''}})
-        }}>Click</Button>
-      <Button 
-        isPrimary
-        onClick={() => {
-          var attr = { ...attributes, [objectAttribute]: {...attributes[objectAttribute], [objectAttribute2]: {...attributes[objectAttribute][objectAttribute2]}}};
-          delete attr[objectAttribute][objectAttribute2][attribute]
-          if(Object.keys(attr[objectAttribute][objectAttribute2]).length === 0) {
-            delete attr[objectAttribute][objectAttribute2]
-          }
-          setAttributes(attr)
-        }}>Delete</Button>
-    </div>
-  )
-
-  // let buildSection = localState.colAdvantages.map(e => {
-  //   return <PanelBody title={__((e+1)+' Section')} initialOpen={true}>
-  //     <PanelRow>
-  //       {getTextToStateTwoObject('Advantages Taitl:'+(attributes.advantagesItems['section'+e] && attributes.advantagesItems['section'+e]['advantagesTaitl']
-  //         ? ' '+attributes.advantagesItems['section'+e]['advantagesTaitl']
-  //         : ' не введено'), null, 'advantagesTaitl', 'advantagesItems', 'section'+e)}
-  //     </PanelRow>
-  //     <PanelRow>
-  //       {getTextToStateTwoObject('Advantages Subtitle: '+(attributes.advantagesItems['section'+e] && attributes.advantagesItems['section'+e]['advantagesSubtitle']
-  //         ? ' '+attributes.advantagesItems['section'+e]['advantagesSubtitle']
-  //         : ' не введено'), null, 'advantagesSubtitle', 'advantagesItems', 'section'+e)}
-  //     </PanelRow>
-  //     {getRadioControl('imgAndIcon', null, [
-  //           { label: 'IMF', value: 'IMG' },
-  //           { label: 'Icon', value: 'ICON' },
-  //         ], 'imgAndIcon')}
-  //     <PanelRow>
-  //       {attributes.imgAndIcon === 'IMG'
-  //         ? getImgToState('sectionImg', 'advantagesItems', 'section'+e)
-  //         : getTextToStateTwoObject(
-  //           <span>Advantages Icon(Пример: 'fa fa-address-book'): {
-  //             (attributes.advantagesItems['section'+e] && attributes.advantagesItems['section'+e]['advantagesIcon']
-  //               ? <spam><i class={attributes.advantagesItems['section'+e]['advantagesIcon']} aria-hidden="true"></i> ({attributes.advantagesItems['section'+e]['advantagesIcon']})</spam>
-  //               : <span>не введено</span>
-  //             )
-  //           }</span>, <a target="_blank" href='https://fontawesome.com/icons?d=gallery'>Icon</a>, 'advantagesIcon', 'advantagesItems', 'section'+e)
-  //       }
-  //     </PanelRow>
-  //     <PanelRow>
-  //       <Button 
-  //         isPrimary
-  //         onClick={() => {
-  //           var attribute = { ...attributes, ['advantagesItems']: {...attributes['advantagesItems']}};
-  //           delete attribute.advantagesItems['section'+e]
-  //           setAttributes(attribute)
-  //       }}>Delete section</Button>
-  //     </PanelRow>
-  //   </PanelBody>
-  // })
-
+  let buildSectionProducts = Object.keys(attributes.dataItems).map(productName => {
+    return <PanelBody title={productName} initialOpen={false}>
+        {attributes.dataItems[productName].formParameters.sequence.map(e => {
+          return <PanelBody title={e} initialOpen={false}>
+            <PanelRow>
+              <TextControl
+                label='Title parameters'
+                type="text"
+                value={attributes.dataItems[productName].formParameters.formTitle[e]}
+                onChange={text =>{
+                  setAttributes({
+                    ...attributes, 'dataItems': {
+                      ...attributes.dataItems, [productName]: {
+                        ...attributes.dataItems[productName], 'formParameters': {
+                          ...attributes.dataItems[productName].formParameters, 'formTitle': {
+                            ...attributes.dataItems[productName].formParameters.formTitle, [e]: text
+                          }
+                        }
+                      }
+                    }
+                  })
+                }}
+              />
+            </PanelRow>
+          </PanelBody>
+        })}
+        
+      <PanelBody title={'new section'} initialOpen={false}>
+        <PanelRow>
+          <TextControl
+            label='new section'
+            type="text"
+            value={localState.newSection[productName]}
+            onChange={text => {
+              setLocalState({...localState, 'newSection': {...localState.newSection, [productName]: text}})
+            }}
+          />
+        </PanelRow>
+        <PanelRow>
+          <Button 
+            isPrimary
+            onClick={() => {
+              setAttributes({
+                ...attributes, 'dataItems': {
+                  ...attributes.dataItems, [productName]: {
+                    ...attributes.dataItems[productName],
+                    'form': {...attributes.dataItems[productName].form},
+                    'formParameters': {
+                      ...attributes.dataItems[productName].formParameters,
+                      'formTitle': {
+                        ...attributes.dataItems[productName].formParameters.formTitle,
+                        [localState.newSection[productName]]: 'Заголовок'
+                      },
+                      'sequence': [
+                        ...attributes.dataItems[productName].formParameters.sequence ,
+                        localState.newSection[productName]
+                      ],
+                    },
+                  }
+                }
+              })
+              setLocalState({ ...localState, 'newSection': {...localState.newSection, [productName]: ''} })
+            }}>Добавить новую секция</Button>
+        </PanelRow>
+      </PanelBody>
+    </PanelBody>
+  })
 
   return (
     <InspectorControls>
@@ -176,18 +105,7 @@ const Controls = ({ attributes, setAttributes, className }) => {
             onClick={() => console.log(attributes)}>State</Button>
         </PanelRow>
       </PanelBody>
-      <PanelBody title={__('main')} initialOpen={true}>
-        {/* <PanelRow>
-          <TextControl
-            label='Col Advantages'
-            type="number"
-            value={attributes.colAdvantages}
-            onChange={text =>{
-              setAttributes({'colAdvantages': text})
-              setLocalState({...localState, 'colAdvantages': [...numberToArrey(text)]})
-            }}
-          />
-        </PanelRow> */}
+      <PanelBody title={__('main')} initialOpen={false}>
         <PanelRow>
           <TextControl
             label='max Col To Row'
@@ -198,8 +116,36 @@ const Controls = ({ attributes, setAttributes, className }) => {
             }}
           />
         </PanelRow>
+        <PanelRow>
+          <TextControl
+            label='New Product'
+            type="text"
+            value={localState.newProduct}
+            onChange={text => {setLocalState({ ...localState, 'newProduct': text })}}
+          />
+        </PanelRow>
+        <PanelRow>
+          <Button 
+            isPrimary
+            onClick={() => {
+              setAttributes({
+                ...attributes, 'dataItems': {
+                  ...attributes.dataItems, [localState.newProduct]: {
+                    'form': {},
+                    'formParameters': {
+                      'formTitle': {},
+                      'sequence': [],
+                    },
+                    'productImg': "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg",
+                    'productName': "Заголовок",
+                  }
+                }
+              })
+              setLocalState({ ...localState, 'newProduct': '' })
+            }}>Добавить новый продукт</Button>
+        </PanelRow>
       </PanelBody>
-      {/* {buildSection} */}
+      {buildSectionProducts}
     </InspectorControls>
   )
 }

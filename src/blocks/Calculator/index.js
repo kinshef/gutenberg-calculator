@@ -17,14 +17,10 @@ registerBlockType('calculator/calculator-main', {
   category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
   keywords: [__('Calculator')],
   attributes: {
-    imgAndIcon: {
-      type: 'string',
-      default: 'ICON',
-    },
-    colAdvantages: {
-      type: 'number',
-      default: 3,
-    },
+    // colAdvantages: {
+    //   type: 'number',
+    //   default: 3,
+    // },
     maxColToRow: {
       type: 'number',
       default: 2,
@@ -33,10 +29,10 @@ registerBlockType('calculator/calculator-main', {
       type: 'bool',
       default: true,
     },
-    advantagesItems: {
-      type: 'Object',
-      default: {}
-    },
+    // advantagesItems: {
+    //   type: 'Object',
+    //   default: {}
+    // },
     dataItems: {
       type: 'Object',
       default: {
@@ -105,11 +101,11 @@ registerBlockType('calculator/calculator-main', {
         preventClick={true}
       >
         <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
-          <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
+          {/* <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
             <Card.BootstrapCol bootstrapGrid={attributes.bootstrapGrid}>
-              {/* <InnerBlocks /> */}
+              <InnerBlocks />
             </Card.BootstrapCol>
-          </Card.BootstrapRow>
+          </Card.BootstrapRow> */}
           {Object.keys(attributes.dataItems).length
           ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
               <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
@@ -125,11 +121,11 @@ registerBlockType('calculator/calculator-main', {
       className={className?className+' ':''+'section-catalog'} 
     >
       <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
-        <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
+        {/* <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
           <Card.BootstrapCol bootstrapGrid={attributes.bootstrapGrid}>
-            {/* <InnerBlocks.Content /> */}
+            <InnerBlocks.Content />
           </Card.BootstrapCol>
-        </Card.BootstrapRow>
+        </Card.BootstrapRow> */}
         {Object.keys(attributes.dataItems).length
         ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
             <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
