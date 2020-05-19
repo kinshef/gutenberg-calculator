@@ -10,20 +10,20 @@ const Controls = ({ attributes, setAttributes, className }) => {
     {'newSection': (()=>{
       let asd = {}
       Object.keys(attributes.dataItems).map(productName => {
-        asd = {...asd, [productName]: ''}
+        asd = {...asd, [productName]: {
+          'nameSection': '',
+          'nemeOneParametersSection': '',
+          // 'valueOneParametersSection': '',
+        }}
       })
       return asd
     })(), 'newProduct': ''}
   )
+
   useEffect(() => {
-    let asd = {...localState.newSection}
-    Object.keys(attributes.dataItems).map(productName => {
-      asd = {...asd, [productName]: ''}
-    })
-    setLocalState({
-      ...localState, 'newSection': { ...asd }
-    })
-  }, [Object.keys(attributes.dataItems).length]);
+    setLocalState({...localState, 'newProduct': ''})
+  }, [attributes.dataItems]);
+
 
   let buildSectionProducts = Object.keys(attributes.dataItems).map(productName => {
     return <PanelBody title={productName} initialOpen={false}>
@@ -57,9 +57,27 @@ const Controls = ({ attributes, setAttributes, className }) => {
           <TextControl
             label='new section'
             type="text"
-            value={localState.newSection[productName]}
+            value={localState.newSection[productName].nameSection}
             onChange={text => {
-              setLocalState({...localState, 'newSection': {...localState.newSection, [productName]: text}})
+              setLocalState({...localState, 'newSection': {
+                ...localState.newSection, [productName]: {
+                  ...localState.newSection[productName], 'nameSection': text
+                }
+              }})
+            }}
+          />
+        </PanelRow>
+        <PanelRow>
+          <TextControl
+            label='neme One Parameters Section'
+            type="text"
+            value={localState.newSection[productName].nemeOneParametersSection}
+            onChange={text => {
+              setLocalState({...localState, 'newSection': {
+                ...localState.newSection, [productName]: {
+                  ...localState.newSection[productName], 'nemeOneParametersSection': text
+                }
+              }})
             }}
           />
         </PanelRow>
@@ -71,28 +89,49 @@ const Controls = ({ attributes, setAttributes, className }) => {
                 ...attributes, 'dataItems': {
                   ...attributes.dataItems, [productName]: {
                     ...attributes.dataItems[productName],
-                    'form': {...attributes.dataItems[productName].form},
+                    'form': (() => {
+                      let nemeParameters = localState.newSection[productName].nemeOneParametersSection
+                      let mainObject = {...attributes.dataItems[productName].form}
+                      let coversArr = (mainObject, nemeParameters) => {
+                        for(let key in mainObject){
+                          if(typeof(mainObject[key]) === "object"){
+                            mainObject[key] = {...mainObject[key]}
+                            coversArr(mainObject[key], nemeParameters)
+                          }else {
+                            mainObject[key] = {...mainObject[key], [nemeParameters]: mainObject[key]}
+                          }
+                        }
+                      }
+                      coversArr(mainObject, nemeParameters)
+                      return mainObject
+                    })(),
                     'formParameters': {
                       ...attributes.dataItems[productName].formParameters,
                       'formTitle': {
                         ...attributes.dataItems[productName].formParameters.formTitle,
-                        [localState.newSection[productName]]: 'Заголовок'
+                        [localState.newSection[productName].nameSection]: 'Заголовок'
                       },
                       'sequence': [
-                        ...attributes.dataItems[productName].formParameters.sequence ,
-                        localState.newSection[productName]
+                        ...attributes.dataItems[productName].formParameters.sequence,
+                        localState.newSection[productName].nameSection
                       ],
                     },
                   }
                 }
               })
-              setLocalState({ ...localState, 'newSection': {...localState.newSection, [productName]: ''} })
+              // setLocalState({ 
+              //   ...localState, 'newSection': {
+              //     ...localState.newSection, [productName]: {
+              //       ...localState.newSection[productName], 'nameSection': '',
+              //       ...localState.newSection[productName], 'nemeOneParametersSection': '',
+              //     }
+              //   }
+              // })
             }}>Добавить новую секция</Button>
         </PanelRow>
       </PanelBody>
     </PanelBody>
   })
-
   return (
     <InspectorControls>
       <PanelBody title={__('dev')} initialOpen={true}>
@@ -128,6 +167,17 @@ const Controls = ({ attributes, setAttributes, className }) => {
           <Button 
             isPrimary
             onClick={() => {
+              setLocalState({
+                ...localState,
+                'newSection': {
+                  ...localState.newSection,
+                  [localState.newProduct]: {
+                    'nameSection': '',
+                    'nemeOneParametersSection': '',
+                    // 'valueOneParametersSection': '',
+                  }
+                },
+              })
               setAttributes({
                 ...attributes, 'dataItems': {
                   ...attributes.dataItems, [localState.newProduct]: {
@@ -141,7 +191,6 @@ const Controls = ({ attributes, setAttributes, className }) => {
                   }
                 }
               })
-              setLocalState({ ...localState, 'newProduct': '' })
             }}>Добавить новый продукт</Button>
         </PanelRow>
       </PanelBody>
