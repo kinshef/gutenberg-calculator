@@ -17,10 +17,6 @@ registerBlockType('calculator/calculator-main', {
   category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
   keywords: [__('Calculator')],
   attributes: {
-    // colAdvantages: {
-    //   type: 'number',
-    //   default: 3,
-    // },
     maxColToRow: {
       type: 'number',
       default: 2,
@@ -29,10 +25,6 @@ registerBlockType('calculator/calculator-main', {
       type: 'bool',
       default: true,
     },
-    // advantagesItems: {
-    //   type: 'Object',
-    //   default: {}
-    // },
     dataItems: {
       type: 'Object',
       default: {
@@ -42,24 +34,21 @@ registerBlockType('calculator/calculator-main', {
                 "d1as": 2601,
                 "d2": 3502,
                 "d3": 4403,
-                "d4": 5304,
               },
               "2": {
                 "d1as": 2602,
                 "d2": 3503,
                 "d3": 4404,
-                "d4": 5305,
               },
               "3": {
                 "d1as": 2603,
                 "d2": 3504,
                 "d3": 4405,
-                "d4": 5306,
               },
               "4": {
-                "d1as": 2607,
-                "d2": 3506,
-                "d3": 4405,
+                "d1as": 2604,
+                "d2": 3505,
+                "d3": 4406,
               },
             },
           'formParameters': {

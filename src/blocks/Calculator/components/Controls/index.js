@@ -13,7 +13,6 @@ const Controls = ({ attributes, setAttributes, className }) => {
         asd = {...asd, [productName]: {
           'nameSection': '',
           'nemeOneParametersSection': '',
-          // 'valueOneParametersSection': '',
         }}
       })
       return asd
@@ -51,7 +50,35 @@ const Controls = ({ attributes, setAttributes, className }) => {
             </PanelRow>
           </PanelBody>
         })}
-        
+
+        <PanelBody title={'Value'} initialOpen={false}>
+          {(() => {
+            let activeIteration = 0;
+            let coversArr = (mainObject, activeIteration) => {
+              return Object.keys(mainObject).map( key => {
+                if(activeIteration === attributes.dataItems[productName].formParameters.sequence.length - 1){
+
+                    if(typeof(mainObject[key]) !== "object"){
+                      return <PanelBody title={key} initialOpen={false}>
+                        {mainObject[key]}
+                      </PanelBody>
+                    }
+
+                }else{
+                  if(typeof(mainObject[key]) === "object"){
+                    let toFalseIteration = activeIteration;
+                    ++toFalseIteration;
+                    return <PanelBody title={key} initialOpen={false}>
+                      {coversArr(mainObject[key], toFalseIteration)}
+                    </PanelBody>
+                  }
+                }
+              })
+            }
+            return coversArr(attributes.dataItems[productName].form, activeIteration)
+          })()}
+        </PanelBody>
+
       <PanelBody title={'new section'} initialOpen={false}>
         <PanelRow>
           <TextControl
@@ -92,17 +119,23 @@ const Controls = ({ attributes, setAttributes, className }) => {
                     'form': (() => {
                       let nemeParameters = localState.newSection[productName].nemeOneParametersSection
                       let mainObject = {...attributes.dataItems[productName].form}
-                      let coversArr = (mainObject, nemeParameters) => {
-                        for(let key in mainObject){
-                          if(typeof(mainObject[key]) === "object"){
-                            mainObject[key] = {...mainObject[key]}
-                            coversArr(mainObject[key], nemeParameters)
-                          }else {
-                            mainObject[key] = {...mainObject[key], [nemeParameters]: mainObject[key]}
+                      if(Object.keys(mainObject).length > 0){
+                        let coversArr = (mainObject, nemeParameters) => {
+                          for(let key in mainObject){
+                            if(typeof(mainObject[key]) === "object"){
+                              mainObject[key] = {...mainObject[key]}
+                              coversArr(mainObject[key], nemeParameters)
+                            }else {
+                              mainObject[key] = {...mainObject[key], [nemeParameters]: mainObject[key]}
+                            }
                           }
                         }
+                        coversArr(mainObject, nemeParameters)
+                      }else {
+                        mainObject = {
+                          [nemeParameters]: 1
+                        }
                       }
-                      coversArr(mainObject, nemeParameters)
                       return mainObject
                     })(),
                     'formParameters': {
@@ -119,14 +152,14 @@ const Controls = ({ attributes, setAttributes, className }) => {
                   }
                 }
               })
-              // setLocalState({ 
-              //   ...localState, 'newSection': {
-              //     ...localState.newSection, [productName]: {
-              //       ...localState.newSection[productName], 'nameSection': '',
-              //       ...localState.newSection[productName], 'nemeOneParametersSection': '',
-              //     }
-              //   }
-              // })
+              setLocalState({ 
+                ...localState, 'newSection': {
+                  ...localState.newSection, [productName]: {
+                    'nameSection': '',
+                    'nemeOneParametersSection': '',
+                  }
+                }
+              })
             }}>Добавить новую секция</Button>
         </PanelRow>
       </PanelBody>
@@ -174,7 +207,6 @@ const Controls = ({ attributes, setAttributes, className }) => {
                   [localState.newProduct]: {
                     'nameSection': '',
                     'nemeOneParametersSection': '',
-                    // 'valueOneParametersSection': '',
                   }
                 },
               })
