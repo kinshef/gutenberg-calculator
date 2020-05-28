@@ -98,13 +98,25 @@ const Controls = ({ attributes, setAttributes, className }) => {
                             }
                           }
                         })
+                        setLocalState({ 
+                          ...localState, 'newSection': {
+                            ...localState.newSection, [productName]: {
+                              'editSection': {
+                                ...localState.newSection[productName].editSection,
+                                [e]: ''
+                              },
+                              'nameSection': '',
+                              'nemeOneParametersSection': '',
+                            }
+                          }
+                        })
                       }else{
                         return Object.keys(mainObject).map( key => {
                           if(typeof(mainObject[key]) === "object"){
                             let toFalseIteration = activeIteration;
                             ++toFalseIteration;
                             mainObject[key] = {...mainObject[key]}
-                            return coversArr(mainObject[key], toFalseIteration, mainObject)
+                            return coversArr(mainObject[key], toFalseIteration, fullMainObject)
                           }
                         })
                       }
