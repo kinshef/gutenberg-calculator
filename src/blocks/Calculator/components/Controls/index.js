@@ -161,7 +161,7 @@ const Controls = ({ attributes, setAttributes, className }) => {
                     ++toFalseIteration;
                     mainObject[key] = {...mainObject[key]}
                     return <PanelBody title={key} initialOpen={false}>
-                      {coversArr(mainObject[key], toFalseIteration, mainObject)}
+                      {coversArr(mainObject[key], toFalseIteration, fullMainObject)}
                     </PanelBody>
                   }
                 }
