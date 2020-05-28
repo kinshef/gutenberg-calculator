@@ -19,7 +19,32 @@ const Controls = ({ attributes, setAttributes, className }) => {
               buildLocal = {...buildLocal, [attributes.dataItems[productName].formParameters.sequence[i]]: ''}
             }
             return buildLocal
-          })()
+          })(),
+          'editValue': (()=>{
+            var buildLocal = {}
+            for(let i=0; i<attributes.dataItems[productName].formParameters.sequence.length; i++){
+              buildLocal = {...buildLocal, [attributes.dataItems[productName].formParameters.sequence[i]]: (()=>{
+                let activeIteration = 0;
+                let asd = {}
+                let coversArr = (mainObject, activeIteration) => {
+                  if(activeIteration === i){
+                    Object.keys(mainObject).map(key => {
+                      asd = {...asd, [key]: ''}
+                    })
+                    return asd
+                  }else{
+                    if(typeof(mainObject[Object.keys(mainObject)[0]]) === "object"){
+                      let toFalseIteration = activeIteration;
+                      ++toFalseIteration;
+                      return coversArr(mainObject[Object.keys(mainObject)[0]], toFalseIteration)
+                    }
+                  }
+                }
+                return coversArr(attributes.dataItems[productName].form, activeIteration)
+              })()}
+            }
+            return buildLocal
+          })(),
         }}
       })
       return buildLocal
@@ -56,6 +81,92 @@ const Controls = ({ attributes, setAttributes, className }) => {
               }}
             />
           </PanelRow>
+
+          {(()=>{
+            let activeIteration = 0;
+            let mainObject = attributes.dataItems[productName].form
+            let coversArr = (mainObject, activeIteration, fullMainObject) => {
+              if(activeIteration === index){
+                return Object.keys(mainObject).map(key => {
+                  return <PanelBody title={key} initialOpen={false}>
+                    <TextControl
+                      label='name value'
+                      type="text"
+                      value={localState.newSection[productName].editValue[e][key]}
+                      onChange={text => {
+                        setLocalState({...localState, 'newSection': {
+                          ...localState.newSection, [productName]: {
+                            ...localState.newSection[productName], 'editValue': {
+                              ...localState.newSection[productName].editValue, [e]: {
+                                ...localState.newSection[productName].editValue[e], [key]: text
+                              }
+                            }
+                          }
+                        }})
+
+                      }}
+                    />
+                    <Button 
+                      isPrimary
+                      onClick={() => {
+                        let activeIteration = 0;
+                        let mainObject = attributes.dataItems[productName].form
+                        let coversArr = (mainObject, activeIteration, fullMainObject, chengeVal) => {
+                          if(activeIteration === index){
+                            mainObject[localState.newSection[productName].editValue[e][key]] = mainObject[chengeVal];
+                            delete mainObject[chengeVal]
+                            setAttributes({
+                              ...attributes, 'dataItems': {
+                                ...attributes.dataItems, [productName]: {
+                                  ...attributes.dataItems[productName], 'form': {
+                                    ...fullMainObject
+                                  }
+                                }
+                              }
+                            })
+                            let wrapSetLocal = ({ 
+                              ...localState, 'newSection': {
+                                ...localState.newSection, [productName]: {
+                                  ...localState.newSection[productName], 'editValue': {
+                                    ...localState.newSection[productName].editValue, [e]: {
+                                      ...localState.newSection[productName].editValue[e],
+                                      [localState.newSection[productName].editValue[e][key]]: ''
+                                    }
+                                  }
+                                }
+                              }
+                            })
+                            delete wrapSetLocal.newSection[productName].editValue[e][key]
+                            setLocalState(wrapSetLocal)
+                          }else{
+                            return Object.keys(mainObject).map( key => {
+                              if(typeof(mainObject[key]) === "object"){
+                                let toFalseIteration = activeIteration;
+                                ++toFalseIteration;
+                                return coversArr(mainObject[key], toFalseIteration, fullMainObject, chengeVal)
+                              }
+                            })
+                          }
+                        }
+                        return coversArr(mainObject, activeIteration, mainObject, key)
+                      }}
+                    >rename</Button>
+
+
+
+                  </PanelBody>
+                })
+              }else{
+                if(typeof([Object.keys(mainObject)[0]]) === "object"){
+                  let toFalseIteration = activeIteration;
+                  ++toFalseIteration;
+                  return coversArr(mainObject[[Object.keys(mainObject)[0]]], toFalseIteration, fullMainObject)
+                }
+              }
+            }
+            return coversArr(mainObject, activeIteration, mainObject)
+          })()}
+
           <PanelBody title={'new value'} initialOpen={false}>
             <TextControl
               label='name new value'
@@ -101,12 +212,11 @@ const Controls = ({ attributes, setAttributes, className }) => {
                     setLocalState({ 
                       ...localState, 'newSection': {
                         ...localState.newSection, [productName]: {
+                          ...localState.newSection[productName],
                           'editSection': {
                             ...localState.newSection[productName].editSection,
                             [e]: ''
-                          },
-                          'nameSection': '',
-                          'nemeOneParametersSection': '',
+                          }
                         }
                       }
                     })
@@ -252,6 +362,13 @@ const Controls = ({ attributes, setAttributes, className }) => {
                       ...localState.newSection[productName].editSection,
                       [localState.newSection[productName].nameSection]: ''
                     },
+                    'editValue': {
+                      ...localState.newSection[productName].editValue,
+                      [localState.newSection[productName].nameSection]: {
+                        ...localState.newSection[productName].editValue[localState.newSection[productName].nameSection],
+                        [localState.newSection[productName].nemeOneParametersSection]: ''
+                      }
+                    },
                     'nameSection': '',
                     'nemeOneParametersSection': '',
                   }
@@ -306,6 +423,7 @@ const Controls = ({ attributes, setAttributes, className }) => {
                     'nameSection': '',
                     'nemeOneParametersSection': '',
                     'editSection': {},
+                    'editValue': {}
                   }
                 },
               })
