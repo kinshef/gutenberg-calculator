@@ -83,18 +83,11 @@ registerBlockType('calculator/calculator-main', {
   edit: ({ attributes, setAttributes, className }) => (
     <Fragment>
       <Controls attributes={attributes} setAttributes={setAttributes} />
-      
       <section additionalClasses={attributes.className ? attributes.className : ''}
         id='section-catalog' 
         className={className?className+' ':''+'section-catalog'}
-        preventClick={true}
-      >
+        preventClick={true}>
         <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
-          {/* <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
-            <Card.BootstrapCol bootstrapGrid={attributes.bootstrapGrid}>
-              <InnerBlocks />
-            </Card.BootstrapCol>
-          </Card.BootstrapRow> */}
           {Object.keys(attributes.dataItems).length
           ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
               <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
@@ -107,14 +100,8 @@ registerBlockType('calculator/calculator-main', {
   save: ({ attributes, className }) => (
     <section id='section-catalog'
       additionalClasses={attributes.className ? attributes.className : ''}
-      className={className?className+' ':''+'section-catalog'} 
-    >
+      className={className?className+' ':''+'section-catalog'} >
       <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
-        {/* <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
-          <Card.BootstrapCol bootstrapGrid={attributes.bootstrapGrid}>
-            <InnerBlocks.Content />
-          </Card.BootstrapCol>
-        </Card.BootstrapRow> */}
         {Object.keys(attributes.dataItems).length
         ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
             <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />

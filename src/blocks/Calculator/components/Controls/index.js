@@ -8,21 +8,21 @@ const Controls = ({ attributes, setAttributes, className }) => {
 
   const [localState, setLocalState] = useState(
     {'newSection': (()=>{
-      let asd = {}
+      let buildLocal = {}
       Object.keys(attributes.dataItems).map(productName => {
-        asd = {...asd, [productName]: {
+        buildLocal = {...buildLocal, [productName]: {
           'nameSection': '',
           'nemeOneParametersSection': '',
           'editSection': (()=>{
-            var asd = {}
+            var buildLocal = {}
             for(let i=0; i<attributes.dataItems[productName].formParameters.sequence.length; i++){
-              asd = {...asd, [attributes.dataItems[productName].formParameters.sequence[i]]: ''}
+              buildLocal = {...buildLocal, [attributes.dataItems[productName].formParameters.sequence[i]]: ''}
             }
-            return asd
+            return buildLocal
           })()
         }}
       })
-      return asd
+      return buildLocal
     })(),
     'newProduct': ''}
   )
@@ -34,61 +34,115 @@ const Controls = ({ attributes, setAttributes, className }) => {
 
   let buildSectionProducts = Object.keys(attributes.dataItems).map(productName => {
     return <PanelBody title={productName} initialOpen={false}>
-        {attributes.dataItems[productName].formParameters.sequence.map((e, index) => {
-          return <PanelBody title={e} initialOpen={false}>
-            <PanelRow>
-              <TextControl
-                label='Title parameters'
-                type="text"
-                value={attributes.dataItems[productName].formParameters.formTitle[e]}
-                onChange={text =>{
-                  setAttributes({
-                    ...attributes, 'dataItems': {
-                      ...attributes.dataItems, [productName]: {
-                        ...attributes.dataItems[productName], 'formParameters': {
-                          ...attributes.dataItems[productName].formParameters, 'formTitle': {
-                            ...attributes.dataItems[productName].formParameters.formTitle, [e]: text
-                          }
+      {attributes.dataItems[productName].formParameters.sequence.map((e, index) => {
+        return <PanelBody title={e} initialOpen={false}>
+          <PanelRow>
+            <TextControl
+              label='Title parameters'
+              type="text"
+              value={attributes.dataItems[productName].formParameters.formTitle[e]}
+              onChange={text =>{
+                setAttributes({
+                  ...attributes, 'dataItems': {
+                    ...attributes.dataItems, [productName]: {
+                      ...attributes.dataItems[productName], 'formParameters': {
+                        ...attributes.dataItems[productName].formParameters, 'formTitle': {
+                          ...attributes.dataItems[productName].formParameters.formTitle, [e]: text
                         }
                       }
                     }
-                  })
-                }}
-              />
-            </PanelRow>
-            <PanelBody title={'new value'} initialOpen={false}>
-              <TextControl
-                label='name new value'
-                type="text"
-                value={localState.newSection[productName].editSection[e]}
-                onChange={text => {
-                  setLocalState({...localState, 'newSection': {
-                    ...localState.newSection, [productName]: {
-                      ...localState.newSection[productName], 'editSection': {
-                        ...localState.newSection[productName].editSection,
-                        [e]: text
-                      }
+                  }
+                })
+              }}
+            />
+          </PanelRow>
+          <PanelBody title={'new value'} initialOpen={false}>
+            <TextControl
+              label='name new value'
+              type="text"
+              value={localState.newSection[productName].editSection[e]}
+              onChange={text => {
+                setLocalState({...localState, 'newSection': {
+                  ...localState.newSection, [productName]: {
+                    ...localState.newSection[productName], 'editSection': {
+                      ...localState.newSection[productName].editSection,
+                      [e]: text
                     }
-                  }})
-                }}
-              />
-              <Button 
-                isPrimary
-                onClick={() => {
-                  let activeIteration = 0;
-                  let mainObject = {...attributes.dataItems[productName].form}
-                  let coversArr = (mainObject, activeIteration, fullMainObject) => {
-                      if(activeIteration === index){
-                        if(Object.keys(mainObject[Object.keys(mainObject)[0]]).length){
-                          for(let i=0; i<Object.keys(mainObject[Object.keys(mainObject)[0]]).length; i++){
-                            mainObject[localState.newSection[productName].editSection[e]] = {
-                              ...mainObject[localState.newSection[productName].editSection[e]],
-                              [Object.keys(mainObject[Object.keys(mainObject)[0]])[i]]: 1
-                            }
-                          }
-                        }else{
-                          mainObject[localState.newSection[productName].editSection[e]] = 1;
+                  }
+                }})
+              }}
+            />
+            <Button 
+              isPrimary
+              onClick={() => {
+                let activeIteration = 0;
+                let mainObject = {...attributes.dataItems[productName].form}
+                let coversArr = (mainObject, activeIteration, fullMainObject) => {
+                  if(activeIteration === index){
+                    if(Object.keys(mainObject[Object.keys(mainObject)[0]]).length){
+                      for(let i=0; i<Object.keys(mainObject[Object.keys(mainObject)[0]]).length; i++){
+                        mainObject[localState.newSection[productName].editSection[e]] = {
+                          ...mainObject[localState.newSection[productName].editSection[e]],
+                          [Object.keys(mainObject[Object.keys(mainObject)[0]])[i]]: 1
                         }
+                      }
+                    }else{
+                      mainObject[localState.newSection[productName].editSection[e]] = 1;
+                    }
+                    setAttributes({
+                      ...attributes, 'dataItems': {
+                        ...attributes.dataItems, [productName]: {
+                          ...attributes.dataItems[productName], 'form': {
+                            ...fullMainObject
+                          }
+                        }
+                      }
+                    })
+                    setLocalState({ 
+                      ...localState, 'newSection': {
+                        ...localState.newSection, [productName]: {
+                          'editSection': {
+                            ...localState.newSection[productName].editSection,
+                            [e]: ''
+                          },
+                          'nameSection': '',
+                          'nemeOneParametersSection': '',
+                        }
+                      }
+                    })
+                  }else{
+                    return Object.keys(mainObject).map( key => {
+                      if(typeof(mainObject[key]) === "object"){
+                        let toFalseIteration = activeIteration;
+                        ++toFalseIteration;
+                        mainObject[key] = {...mainObject[key]}
+                        return coversArr(mainObject[key], toFalseIteration, fullMainObject)
+                      }
+                    })
+                  }
+                }
+                return coversArr(mainObject, activeIteration, mainObject)
+              }}
+            >add</Button>
+          </PanelBody>
+        </PanelBody>
+      })}
+
+      <PanelBody title={'Value'} initialOpen={false}>
+        {(() => {
+          let activeIteration = 0;
+          let mainObject = {...attributes.dataItems[productName].form}
+          let coversArr = (mainObject, activeIteration, fullMainObject) => {
+            return Object.keys(mainObject).map( key => {
+              if(activeIteration === attributes.dataItems[productName].formParameters.sequence.length - 1){
+                if(typeof(mainObject[key]) !== "object"){
+                  return <PanelBody title={key} initialOpen={false}>
+                    <TextControl
+                      label='value'
+                      type="number"
+                      value={mainObject[key]}
+                      onChange={text => {
+                        mainObject[key] = +text;
                         setAttributes({
                           ...attributes, 'dataItems': {
                             ...attributes.dataItems, [productName]: {
@@ -98,78 +152,25 @@ const Controls = ({ attributes, setAttributes, className }) => {
                             }
                           }
                         })
-                        setLocalState({ 
-                          ...localState, 'newSection': {
-                            ...localState.newSection, [productName]: {
-                              'editSection': {
-                                ...localState.newSection[productName].editSection,
-                                [e]: ''
-                              },
-                              'nameSection': '',
-                              'nemeOneParametersSection': '',
-                            }
-                          }
-                        })
-                      }else{
-                        return Object.keys(mainObject).map( key => {
-                          if(typeof(mainObject[key]) === "object"){
-                            let toFalseIteration = activeIteration;
-                            ++toFalseIteration;
-                            mainObject[key] = {...mainObject[key]}
-                            return coversArr(mainObject[key], toFalseIteration, fullMainObject)
-                          }
-                        })
-                      }
-                  }
-                  return coversArr(mainObject, activeIteration, mainObject)
-                }}>add</Button>
-            </PanelBody>
-          </PanelBody>
-        })}
-
-        <PanelBody title={'Value'} initialOpen={false}>
-          {(() => {
-            let activeIteration = 0;
-            let mainObject = {...attributes.dataItems[productName].form}
-            let coversArr = (mainObject, activeIteration, fullMainObject) => {
-              return Object.keys(mainObject).map( key => {
-                if(activeIteration === attributes.dataItems[productName].formParameters.sequence.length - 1){
-                  if(typeof(mainObject[key]) !== "object"){
-                    return <PanelBody title={key} initialOpen={false}>
-                      <TextControl
-                        label='value'
-                        type="number"
-                        value={mainObject[key]}
-                        onChange={text => {
-                          mainObject[key] = +text;
-                          setAttributes({
-                            ...attributes, 'dataItems': {
-                              ...attributes.dataItems, [productName]: {
-                                ...attributes.dataItems[productName], 'form': {
-                                  ...fullMainObject
-                                }
-                              }
-                            }
-                          })
-                        }}
-                      />
-                    </PanelBody>
-                  }
-                }else{
-                  if(typeof(mainObject[key]) === "object"){
-                    let toFalseIteration = activeIteration;
-                    ++toFalseIteration;
-                    mainObject[key] = {...mainObject[key]}
-                    return <PanelBody title={key} initialOpen={false}>
-                      {coversArr(mainObject[key], toFalseIteration, fullMainObject)}
-                    </PanelBody>
-                  }
+                      }}
+                    />
+                  </PanelBody>
                 }
-              })
-            }
-            return coversArr(mainObject, activeIteration, mainObject)
-          })()}
-        </PanelBody>
+              }else{
+                if(typeof(mainObject[key]) === "object"){
+                  let toFalseIteration = activeIteration;
+                  ++toFalseIteration;
+                  mainObject[key] = {...mainObject[key]}
+                  return <PanelBody title={key} initialOpen={false}>
+                    {coversArr(mainObject[key], toFalseIteration, fullMainObject)}
+                  </PanelBody>
+                }
+              }
+            })
+          }
+          return coversArr(mainObject, activeIteration, mainObject)
+        })()}
+      </PanelBody>
 
       <PanelBody title={'new section'} initialOpen={false}>
         <PanelRow>
@@ -256,7 +257,8 @@ const Controls = ({ attributes, setAttributes, className }) => {
                   }
                 }
               })
-            }}>Добавить новую секция</Button>
+            }}
+          >Добавить новую секция</Button>
         </PanelRow>
       </PanelBody>
     </PanelBody>
@@ -320,7 +322,8 @@ const Controls = ({ attributes, setAttributes, className }) => {
                   }
                 }
               })
-            }}>Добавить новый продукт</Button>
+            }}
+          >Добавить новый продукт</Button>
         </PanelRow>
       </PanelBody>
       {buildSectionProducts}
