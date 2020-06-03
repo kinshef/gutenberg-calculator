@@ -151,9 +151,78 @@ const Controls = ({ attributes, setAttributes, className }) => {
                         return coversArr(mainObject, activeIteration, mainObject, key)
                       }}
                     >rename</Button>
-
-
-
+                    <Button 
+                      isPrimary
+                      onClick={() => {
+                        let activeIteration = 0;
+                        let mainObject = attributes.dataItems[productName].form
+                        let coversArr = (mainObject, activeIteration, fullMainObject, chengeVal, parentMainObject, parentActiveKey) => {
+                          if(activeIteration === index){
+                            let wrapFormParam = {
+                              ...attributes.dataItems[productName].formParameters,
+                              'formTitle': {
+                                ...attributes.dataItems[productName].formParameters.formTitle
+                              },
+                              'sequence': [
+                                ...attributes.dataItems[productName].formParameters.sequence
+                              ]
+                            }
+                            if(--Object.keys(mainObject).length){
+                              delete mainObject[chengeVal]
+                            }else {
+                              let asd = parentMainObject[parentActiveKey][chengeVal]
+                              delete parentMainObject[parentActiveKey]
+                              parentMainObject[parentActiveKey] = asd
+                              delete wrapFormParam.formTitle[e]
+                              wrapFormParam.sequence.splice(index, 1);
+                            }
+                            setAttributes({
+                              ...attributes, 'dataItems': {
+                                ...attributes.dataItems, [productName]: {
+                                  ...attributes.dataItems[productName], 
+                                  'form': {
+                                    ...fullMainObject
+                                  },
+                                  'formParameters': {
+                                    ...wrapFormParam
+                                  }
+                                }
+                              }
+                            })
+                            let wrapSetLocal = ({ 
+                              ...localState, 'newSection': {
+                                ...localState.newSection, [productName]: {
+                                  ...localState.newSection[productName],
+                                  'editSection': {
+                                    ...localState.newSection[productName].editSection
+                                  },
+                                  'editValue': {
+                                    ...localState.newSection[productName].editValue, [e]: {
+                                      ...localState.newSection[productName].editValue[e]
+                                    }
+                                  }
+                                }
+                              }
+                            })
+                            delete wrapSetLocal.newSection[productName].editValue[e][key]
+                            if(!Object.keys(wrapSetLocal.newSection[productName].editValue[e]).length){
+                              delete wrapSetLocal.newSection[productName].editSection[e]
+                              delete wrapSetLocal.newSection[productName].editValue[e]
+                            }
+                            setLocalState(wrapSetLocal)
+                          }else{
+                            return Object.keys(mainObject).map( key => {
+                              if(typeof(mainObject[key]) === "object"){
+                                let toFalseIteration = activeIteration;
+                                ++toFalseIteration;
+                                return coversArr(mainObject[key], toFalseIteration, fullMainObject, chengeVal, mainObject, key)
+                              }
+                            })
+                          }
+                        }
+                        return coversArr(mainObject, activeIteration, mainObject, key)
+                      }}
+                    >delete</Button>
                   </PanelBody>
                 })
               }else{
