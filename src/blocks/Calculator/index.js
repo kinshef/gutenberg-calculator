@@ -25,6 +25,17 @@ registerBlockType('calculator/calculator-main', {
       type: 'bool',
       default: true,
     },
+    bottomSection: {
+      type: 'Object',
+      default: {
+        'parametersBtn': {
+          'color': 'btn-warning',
+          'modalTarget': '#modal-order',
+          'placeholder': 'Ваш телефон'
+        },
+        'typeFeedback': 'phoneBtn',
+      }
+    },
     dataItems: {
       type: 'Object',
       default: {
@@ -90,7 +101,7 @@ registerBlockType('calculator/calculator-main', {
         <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
           {Object.keys(attributes.dataItems).length
           ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
-              <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
+              <Card.BuildSectionCalc bottomSection={attributes.bottomSection} dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
             </Card.BootstrapRow>
           : <div>Заполните хотя-бы одну секцию</div>}
         </Card.BootstrapContainer>
@@ -104,7 +115,7 @@ registerBlockType('calculator/calculator-main', {
       <Card.BootstrapContainer bootstrapGrid={attributes.bootstrapGrid}>
         {Object.keys(attributes.dataItems).length
         ? <Card.BootstrapRow bootstrapGrid={attributes.bootstrapGrid}>
-            <Card.BuildSectionCalc dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
+            <Card.BuildSectionCalc bottomSection={attributes.bottomSection} dataItems={attributes.dataItems} maxColToRow={attributes.maxColToRow} />
           </Card.BootstrapRow>
         : <div>Заполните хотя-бы одну секцию</div>}
       </Card.BootstrapContainer>

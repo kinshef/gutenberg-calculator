@@ -91,3 +91,12 @@
   100% {
     -webkit-transform: scale(1);
     transform: scale(1); } }
+
+.has-calculator .calculator-form .calculator-form-input {
+  -ms-flex: 2;
+      flex: 2;
+  min-width: 220px; }
+
+.has-calculator .calculator-form .calculator-form-button {
+  -ms-flex: 1;
+      flex: 1; }

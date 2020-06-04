@@ -57,8 +57,45 @@ const Controls = ({ attributes, setAttributes, className }) => {
   }, [attributes.dataItems]);
 
 
+  const getImgToState = (attribute, objectAttribute, objectAttribute2 ) => (
+    <MediaUpload
+      onSelect={e => {
+        objectAttribute
+          ? objectAttribute2
+            ? attributes[objectAttribute] && attributes[objectAttribute][objectAttribute2]
+              ? setAttributes({ ...attributes, [objectAttribute]: { ...attributes[objectAttribute], [objectAttribute2]: {...attributes[objectAttribute][objectAttribute2], [attribute]: e.sizes.full.url}}})
+              : setAttributes({ ...attributes, [objectAttribute]: { ...attributes[objectAttribute], [objectAttribute2]: {[attribute]: e.sizes.full.url}}})
+            : setAttributes({ ...attributes, [objectAttribute]: {...attributes[objectAttribute], [attribute]: e.sizes.full.url}})
+          : setAttributes({...attributes, [attribute]: e.sizes.full.url})
+      }}
+      render={({ open }) => {
+        return <div>
+          {attributes[objectAttribute] !== undefined && attributes[objectAttribute][attribute] !== undefined
+            ? <img src={attributes[objectAttribute][attribute]} onClick={open} />
+            : <Button isPrimary onClick={open}>Добавить иконку</Button>}
+        </div>
+      }}
+    />
+  )
   let buildSectionProducts = Object.keys(attributes.dataItems).map(productName => {
     return <PanelBody title={productName} initialOpen={false}>
+      <PanelBody title='parameters product' initialOpen={false}>
+        <TextControl
+          label='Title product'
+          type="text"
+          value={attributes.dataItems[productName]['productName']}
+          onChange={text =>{
+            setAttributes({
+              ...attributes, 'dataItems': {
+                ...attributes.dataItems, [productName]: {
+                  ...attributes.dataItems[productName], 'productName': text
+                }
+              }
+            })
+          }}
+        />
+        {getImgToState('productImg', 'dataItems', productName)}
+      </PanelBody>
       {attributes.dataItems[productName].formParameters.sequence.map((e, index) => {
         return <PanelBody title={e} initialOpen={false}>
           <PanelRow>
@@ -103,7 +140,6 @@ const Controls = ({ attributes, setAttributes, className }) => {
                             }
                           }
                         }})
-
                       }}
                     />
                     <Button 
@@ -170,9 +206,16 @@ const Controls = ({ attributes, setAttributes, className }) => {
                             if(--Object.keys(mainObject).length){
                               delete mainObject[chengeVal]
                             }else {
-                              let asd = parentMainObject[parentActiveKey][chengeVal]
-                              delete parentMainObject[parentActiveKey]
-                              parentMainObject[parentActiveKey] = asd
+                              if(parentMainObject){
+                                let asd = parentMainObject[parentActiveKey][chengeVal]
+                                delete parentMainObject[parentActiveKey]
+                                parentMainObject[parentActiveKey] = asd
+                              }else {
+                                let asd = mainObject[chengeVal]
+                                delete mainObject[chengeVal]
+                                mainObject = {...asd}
+                                fullMainObject = mainObject
+                              }
                               delete wrapFormParam.formTitle[e]
                               wrapFormParam.sequence.splice(index, 1);
                             }
@@ -462,6 +505,40 @@ const Controls = ({ attributes, setAttributes, className }) => {
         </PanelRow>
       </PanelBody>
       <PanelBody title={__('main')} initialOpen={false}>
+        <RadioControl
+          label={'type of feedback'}
+          help={null}
+          selected={
+            attributes.bottomSection.typeFeedback
+          }
+          options={[
+            { label: 'phoneBtn', value: 'phoneBtn' },
+            { label: 'modal', value: 'modal' },
+          ]}
+          onChange={ val => {
+            setAttributes({ 
+              ...attributes, ['bottomSection']: {
+                ...attributes['bottomSection'], 'typeFeedback': val
+              }
+            })
+          }}
+        />
+        {attributes.bottomSection.typeFeedback === 'modal'
+          ? <TextControl
+            label='modal Target'
+            type="text"
+            value={attributes.bottomSection.parametersBtn.modalTarget}
+            onChange={text => {setAttributes({
+              ...attributes, 'bottomSection': {
+                ...attributes.bottomSection, 'parametersBtn': {
+                  ...attributes.bottomSection.parametersBtn, 'modalTarget': text
+                }
+              }
+            })}}
+          />
+          : null}
+
+
         <PanelRow>
           <TextControl
             label='max Col To Row'
@@ -484,31 +561,33 @@ const Controls = ({ attributes, setAttributes, className }) => {
           <Button 
             isPrimary
             onClick={() => {
-              setLocalState({
-                ...localState,
-                'newSection': {
-                  ...localState.newSection,
-                  [localState.newProduct]: {
-                    'nameSection': '',
-                    'nemeOneParametersSection': '',
-                    'editSection': {},
-                    'editValue': {}
+              if(localState.newProduct !== ''){
+                setLocalState({
+                  ...localState,
+                  'newSection': {
+                    ...localState.newSection,
+                    [localState.newProduct]: {
+                      'nameSection': '',
+                      'nemeOneParametersSection': '',
+                      'editSection': {},
+                      'editValue': {}
+                    }
+                  },
+                })
+                setAttributes({
+                  ...attributes, 'dataItems': {
+                    ...attributes.dataItems, [localState.newProduct]: {
+                      'form': {},
+                      'formParameters': {
+                        'formTitle': {},
+                        'sequence': [],
+                      },
+                      'productImg': "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg",
+                      'productName': "Заголовок",
+                    }
                   }
-                },
-              })
-              setAttributes({
-                ...attributes, 'dataItems': {
-                  ...attributes.dataItems, [localState.newProduct]: {
-                    'form': {},
-                    'formParameters': {
-                      'formTitle': {},
-                      'sequence': [],
-                    },
-                    'productImg': "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg",
-                    'productName': "Заголовок",
-                  }
-                }
-              })
+                })
+              }
             }}
           >Добавить новый продукт</Button>
         </PanelRow>

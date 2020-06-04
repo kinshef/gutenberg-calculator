@@ -64,7 +64,7 @@ const BuildFormInputRadio = ( fullForm, formParameters, product ) => {
 	})
 }
 
-const BuildSectionCalc = ({ dataItems, maxColToRow }) => {
+const BuildSectionCalc = ({ dataItems, maxColToRow, bottomSection }) => {
 	return Object.keys(dataItems).map( product => {
 		return <div className="col-md col-12 my-3" style={{minWidth: Math.round(100/maxColToRow)+'%'}}>
 			<div className="section-catalog__cart-product">
@@ -80,15 +80,21 @@ const BuildSectionCalc = ({ dataItems, maxColToRow }) => {
 					<div className="col-12 text-center p-3 bg-white">
 						{BuildFormInputRadio(dataItems[product].form, dataItems[product].formParameters, product)}
 						<div className="col-12 pl-4">
-							<s><p className="jPriceOld" data-animation="animated tada delay-1s">0</p></s>
-							<p className="h3 text-red jPrice" data-animation="animated tada delay-1s">0 руб.</p>
+							<s><span className="jPriceOld" data-animation="animated tada delay-1s">0</span><span> руб.</span></s>
+							<div><span className="h3 text-red jPrice" data-animation="animated tada delay-1s">0</span><span> руб.</span></div>
 						</div>
 						<div className="col-12">
-							<div className="my-3">
-								<button type="button"
-									className="btn btn-warning btn-block btn-lg shadow transition--slide"
-									data-toggle="modal" data-target="#modal-order">Заказать</button>
-							</div>
+							{bottomSection.typeFeedback === 'modal'
+								? <button type="button" className="btn my-3 btn-warning btn-block btn-lg shadow"
+									data-toggle="modal" data-target={bottomSection.parametersBtn.modalTarget}>Заказать</button>
+								: <div class="form-inline calculator-form my-3">
+									<div class="form-group calculator-form-input">
+										<input type="tel" name="phone" class="w-100 form-control" placeholder={bottomSection.parametersBtn.placeholder} required=""/>
+									</div>
+									<div class="form-group calculator-form-button">
+										<button type="submit" class={`w-100 ${bottomSection.parametersBtn.color}`}>Заказать</button>
+									</div>
+								</div>}
 						</div>
 					</div>
 				</form>
