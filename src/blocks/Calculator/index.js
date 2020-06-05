@@ -29,7 +29,8 @@ registerBlockType('calculator/calculator-main', {
       type: 'Object',
       default: {
         'parametersBtn': {
-          'color': 'btn-warning',
+          'colorOne': '#5fc6e9',
+          'colorTwo': '#598ecc',
           'modalTarget': '#modal-order',
           'placeholder': 'Ваш телефон'
         },

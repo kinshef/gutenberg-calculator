@@ -87,12 +87,13 @@ const BuildSectionCalc = ({ dataItems, maxColToRow, bottomSection }) => {
 							{bottomSection.typeFeedback === 'modal'
 								? <button type="button" className="btn my-3 btn-warning btn-block btn-lg shadow"
 									data-toggle="modal" data-target={bottomSection.parametersBtn.modalTarget}>Заказать</button>
-								: <div class="form-inline calculator-form my-3">
+								: <div class="form-inline calculator-form my-3 align-items-stretch">
 									<div class="form-group calculator-form-input">
-										<input type="tel" name="phone" class="w-100 form-control" placeholder={bottomSection.parametersBtn.placeholder} required=""/>
+										<input type="tel" name="phone" class="w-100 h-100 mx-1 form-control" placeholder={bottomSection.parametersBtn.placeholder} required=""/>
 									</div>
 									<div class="form-group calculator-form-button">
-										<button type="submit" class={`w-100 ${bottomSection.parametersBtn.color}`}>Заказать</button>
+										<button type="submit" class={`w-100 mx-1 btn-warning`}>Заказать</button>
+										{/* <button type="submit" class={`w-100 mx-1 ${bottomSection.parametersBtn.color}`}>Заказать</button> */}
 									</div>
 								</div>}
 						</div>

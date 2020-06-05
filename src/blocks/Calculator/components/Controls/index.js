@@ -1,7 +1,9 @@
+import './style.scss';
+
 const { __ } = wp.i18n
 const { InspectorControls, MediaUpload } = wp.blockEditor
 const {useState, useEffect} = wp.element
-const {PanelBody, PanelRow, TextControl, Button, CheckboxControl, SelectControl, RadioControl} = wp.components
+const {PanelBody, PanelRow, TextControl, Button, CheckboxControl, SelectControl, RadioControl, ColorPicker} = wp.components
 
 
 const Controls = ({ attributes, setAttributes, className }) => {
@@ -505,6 +507,36 @@ const Controls = ({ attributes, setAttributes, className }) => {
         </PanelRow>
       </PanelBody>
       <PanelBody title={__('main')} initialOpen={false}>
+
+      <PanelBody title={__('btn')} initialOpen={false}>
+        <ColorPicker
+          help={'color one'}
+          color={ attributes.bottomSection.parametersBtn.colorOne }
+          onChangeComplete={ value => {
+            setAttributes({ 
+              ...attributes, 'bottomSection': {
+                ...attributes.bottomSection, 'parametersBtn': {
+                  ...attributes.bottomSection.parametersBtn ,'colorOne': value.hex
+                }
+              }
+            })
+          }}
+        />
+        <ColorPicker
+          help={'color one'}
+          color={ attributes.bottomSection.parametersBtn.colorTwo }
+          onChangeComplete={ value => {
+            setAttributes({ 
+              ...attributes, 'bottomSection': {
+                ...attributes.bottomSection, 'parametersBtn': {
+                  ...attributes.bottomSection.parametersBtn ,'colorTwo': value.hex
+                }
+              }
+            })
+          } }
+        />
+      </PanelBody>
+
         <RadioControl
           label={'type of feedback'}
           help={null}
